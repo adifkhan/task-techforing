@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -10,18 +10,53 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from 'react-firebase-hooks/auth';
+import auth from '../../Firebase/firebase.config';
+import useToken from '../../Hooks/useToken';
+import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 const Register = () => {
-  const handleSubmit = (event) => {
+  const [termsStatus, setTermsStatus] = useState(false);
+  const [confirmpassword, setConfirmPassword] = useState('');
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+
+  const [token] = useToken(user);
+
+  useEffect(() => {
+    if (token) {
+      signOut(auth);
+      localStorage.removeItem('accessToken');
+      navigate('/login');
+    }
+  }, [token, navigate]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    await createUserWithEmailAndPassword(userInfo.email, userInfo.password);
+    await updateProfile({ displayName: userInfo.name });
   };
+  let errorMessage = '';
+  if (error || updateError) {
+    errorMessage = (
+      <Typography variant='caption' sx={{ color: 'red' }}>
+        {error?.message || updateError.message}
+      </Typography>
+    );
+  }
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component='main' maxWidth='xs'>
@@ -37,42 +72,35 @@ const Register = () => {
           <Typography component='h1' variant='h5'>
             Register
           </Typography>
-          <Box
-            component='form'
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box component='form' onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   autoComplete='given-name'
-                  name='firstName'
+                  name='name'
                   required
                   fullWidth
-                  id='firstName'
-                  label='First Name'
+                  id='name'
+                  label='Name'
                   autoFocus
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, name: e.target.value })
+                  }
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id='lastName'
-                  label='Last Name'
-                  name='lastName'
-                  autoComplete='family-name'
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+                  type='email'
                   id='email'
                   label='Email Address'
                   name='email'
                   autoComplete='email'
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, email: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
@@ -84,35 +112,57 @@ const Register = () => {
                   type='password'
                   id='password'
                   autoComplete='new-password'
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, password: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  name='confirmpassword'
+                  name='confirmPassword'
                   label='Confirm Password'
                   type='password'
                   id='confirmpassword'
                   autoComplete='new-password'
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
                   control={
-                    <Checkbox value='allowExtraEmails' color='primary' />
+                    <Checkbox
+                      value='allowExtraEmails'
+                      name='terms'
+                      color='primary'
+                      onChange={() => setTermsStatus(!termsStatus)}
+                    />
                   }
                   label='Agree to terms and conditions'
                 />
               </Grid>
             </Grid>
+            {errorMessage}
             <Button
               type='submit'
               fullWidth
               variant='contained'
-              sx={{ backgroundColor: '#182f59', mt: 3, mb: 2 }}
+              sx={{
+                backgroundColor: '#182f59',
+                mt: 3,
+                mb: 2,
+                '&:hover': {
+                  backgroundColor: '#182f59',
+                },
+              }}
+              disabled={
+                termsStatus === false ||
+                userInfo.password !== confirmpassword ||
+                confirmpassword === ''
+              }
             >
-              Register
+              {loading || updating ? 'Registering...' : 'Register'}
             </Button>
             <Grid container justifyContent='flex-end'>
               <Grid item>

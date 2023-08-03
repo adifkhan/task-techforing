@@ -10,11 +10,16 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../images/logo.png';
-
-const settings = ['Profile', 'Dashboard', 'Logout'];
+import { useAuthState } from 'react-firebase-hooks/auth';
+import auth from '../../Firebase/firebase.config';
+import { Divider } from '@mui/material';
+import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -68,9 +73,12 @@ const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title='Open settings'>
+            <Tooltip title='Open Menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                <Avatar
+                  alt='Remy Sharp'
+                  src='https://i.ibb.co/0cxPv7z/Maynul-Islam-Adif.jpg'
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -89,11 +97,42 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
+              {user && (
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Box>
+                    <Typography textAlign='start' sx={{ lineHeight: '10px' }}>
+                      {user.displayName}
+                    </Typography>
+                    <Typography
+                      textAlign='start'
+                      variant='caption'
+                      sx={{ lineHeight: '10px' }}
+                    >
+                      {user.email}
+                    </Typography>
+                  </Box>
                 </MenuItem>
-              ))}
+              )}
+              <Divider />
+              <MenuItem onClick={handleCloseUserMenu}>
+                {user ? (
+                  <Typography
+                    textAlign='start'
+                    sx={{ lineHeight: '10px' }}
+                    onClick={() => signOut(auth)}
+                  >
+                    Sign Out
+                  </Typography>
+                ) : (
+                  <Typography
+                    textAlign='start'
+                    sx={{ lineHeight: '10px' }}
+                    onClick={() => navigate('/login')}
+                  >
+                    Login
+                  </Typography>
+                )}
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
