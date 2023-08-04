@@ -9,7 +9,7 @@ const useToken = (user) => {
     const currentUser = { email: email, displayName: displayName };
 
     if (email) {
-      fetch(`http://localhost:5000/user`, {
+      fetch(`https://task-techforing-server.vercel.app/user`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',

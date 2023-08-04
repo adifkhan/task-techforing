@@ -12,12 +12,15 @@ const PostDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/post-details?postId=${postId}`, {
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-    })
+    fetch(
+      `https://task-techforing-server.vercel.app/post-details?postId=${postId}`,
+      {
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -31,7 +34,7 @@ const PostDetails = () => {
   const handleDeletePost = (id) => {
     const confirmDelete = window.confirm('want ot delete this post?');
     if (confirmDelete) {
-      fetch(`http://localhost:5000/post?id=${id}`, {
+      fetch(`https://task-techforing-server.vercel.app/post?id=${id}`, {
         method: 'DELETE',
         headers: {
           'content-type': 'application/json',

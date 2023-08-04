@@ -24,12 +24,15 @@ export default function JobAccordion() {
   const [jobPosts, setJobPosts] = useState([]);
 
   const getJobPosts = (category) => {
-    fetch(`http://localhost:5000/jobpost?category=${category}`, {
-      headers: {
-        'content-type': 'application/json',
-        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-    })
+    fetch(
+      `https://task-techforing-server.vercel.app/jobpost?category=${category}`,
+      {
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

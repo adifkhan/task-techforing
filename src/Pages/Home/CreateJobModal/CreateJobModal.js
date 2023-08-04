@@ -46,7 +46,7 @@ export default function CreateJobModal(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch('http://localhost:5000/jobpost', {
+    fetch('https://task-techforing-server.vercel.app/jobpost', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
