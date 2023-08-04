@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import { signOut } from 'firebase/auth';
 import {
   Button,
   FormControl,
@@ -10,7 +11,8 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import useCategories from '../../../../Hooks/useCategories';
+import auth from '../../../Firebase/firebase.config';
+import useCategories from '../../../Hooks/useCategories';
 
 const style = {
   position: 'absolute',
@@ -36,6 +38,7 @@ export default function CreateJobModal(props) {
     title: '',
     category: '',
     location: '',
+    vacancy: '',
     salary: '',
     description: '',
   });
@@ -56,6 +59,8 @@ export default function CreateJobModal(props) {
         if (result.acknowledged) {
           handleClose();
           alert('Your Job Post Created Successfully');
+        } else {
+          signOut(auth);
         }
       });
   };
@@ -73,6 +78,7 @@ export default function CreateJobModal(props) {
               <TextField
                 required
                 fullWidth
+                type='text'
                 id='title'
                 label='Job Title'
                 name='title'
@@ -103,6 +109,7 @@ export default function CreateJobModal(props) {
               <TextField
                 required
                 fullWidth
+                type='text'
                 id='location'
                 label='Job Location'
                 name='location'
@@ -115,6 +122,20 @@ export default function CreateJobModal(props) {
               <TextField
                 required
                 fullWidth
+                type='number'
+                id='vacancy'
+                label='Vacancy'
+                name='vacancy'
+                onChange={(e) =>
+                  setJobInfo({ ...jobInfo, vacancy: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                type='number'
                 id='salary'
                 label='Salary'
                 name='salary'
@@ -128,6 +149,7 @@ export default function CreateJobModal(props) {
                 required
                 fullWidth
                 multiline
+                type='text'
                 id='description'
                 label='Job Description'
                 name='description'

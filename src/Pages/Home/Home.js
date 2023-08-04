@@ -2,12 +2,13 @@ import { Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import JobAccordion from './JobAccordion/JobAccordion';
 import bgImage from '../../images/breadcrumb-bg.jpg';
-import CreateJobModal from './JobAccordion/CreateJobModal/CreateJobModal';
+import CreateJobModal from './CreateJobModal/CreateJobModal';
 
 const Home = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   return (
     <Box>
       <Box
@@ -32,6 +33,7 @@ const Home = () => {
           variant='h5'
           sx={{
             fontWeight: '600',
+            textAlign: 'center',
           }}
         >
           BROWSE OPEN POSITIONS BY CATEGORY

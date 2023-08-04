@@ -4,12 +4,13 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { Box, IconButton, Paper, Stack } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import { Box, IconButton, Paper, Stack, Tooltip } from '@mui/material';
 import useCategories from '../../../Hooks/useCategories';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import auth from '../../../Firebase/firebase.config';
 
 export default function JobAccordion() {
   const [expanded, setExpanded] = useState(false);
@@ -21,6 +22,7 @@ export default function JobAccordion() {
 
   const [categories] = useCategories();
   const [jobPosts, setJobPosts] = useState([]);
+
   const getJobPosts = (category) => {
     fetch(`http://localhost:5000/jobpost?category=${category}`, {
       headers: {
@@ -29,7 +31,13 @@ export default function JobAccordion() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setJobPosts(data));
+      .then((data) => {
+        if (data.success) {
+          setJobPosts(data.jobPosts);
+        } else {
+          signOut(auth);
+        }
+      });
   };
 
   const navigatePostDetails = (id) => {
@@ -77,17 +85,11 @@ export default function JobAccordion() {
                     onClick={() => navigatePostDetails(post._id)}
                   >
                     <Typography sx={{ p: 1 }}>{post.title}</Typography>
-                    <Box>
+                    <Tooltip title='view details'>
                       <IconButton aria-label='edit' sx={{ color: 'black' }}>
-                        <EditIcon />
+                        <SendIcon />
                       </IconButton>
-                      <IconButton
-                        aria-label='delete'
-                        sx={{ ml: 2, color: 'black' }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Box>
+                    </Tooltip>
                   </Paper>
                 ))}
               </Stack>
