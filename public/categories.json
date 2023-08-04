@@ -1,0 +1,9 @@
+[
+  { "_id": "1", "title": "Sales & Marketing", "name": "Sales-and-Marketing" },
+  { "_id": "2", "title": "Creative", "name": "Creative" },
+  { "_id": "3", "title": "Human Resource", "name": "Human-Resource" },
+  { "_id": "4", "title": "Administration", "name": "Administration" },
+  { "_id": "5", "title": "Digital Marketing", "name": "Digital-Marketing" },
+  { "_id": "6", "title": "Development", "name": "Development" },
+  { "_id": "7", "title": "Engineering", "name": "Engineering" }
+]

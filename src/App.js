@@ -6,6 +6,7 @@ import Login from './Pages/Login/Login';
 import NotFound from './Pages/NotFound/NotFound';
 import Header from './Components/Header/Header';
 import RequireAuth from './Components/PrivateRoute/RequireAuth';
+import PostDetails from './Pages/PostDetails/PostDetails';
 
 function App() {
   return (
@@ -17,6 +18,14 @@ function App() {
           element={
             <RequireAuth>
               <Home />
+            </RequireAuth>
+          }
+        ></Route>
+        <Route
+          path='/post/:postId'
+          element={
+            <RequireAuth>
+              <PostDetails />
             </RequireAuth>
           }
         ></Route>

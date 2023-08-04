@@ -116,21 +116,21 @@ const Header = () => {
               <Divider />
               <MenuItem onClick={handleCloseUserMenu}>
                 {user ? (
-                  <Typography
-                    textAlign='start'
-                    sx={{ lineHeight: '10px' }}
-                    onClick={() => signOut(auth)}
-                  >
-                    Sign Out
-                  </Typography>
+                  <Box width='100%' height='20px' onClick={() => signOut(auth)}>
+                    <Typography textAlign='start' sx={{ lineHeight: '10px' }}>
+                      Sign Out
+                    </Typography>
+                  </Box>
                 ) : (
-                  <Typography
-                    textAlign='start'
-                    sx={{ lineHeight: '10px' }}
-                    onClick={() => navigate('/login')}
-                  >
-                    Login
-                  </Typography>
+                  <Box>
+                    <Typography
+                      textAlign='start'
+                      sx={{ lineHeight: '10px' }}
+                      onClick={() => navigate('/login')}
+                    >
+                      Login
+                    </Typography>
+                  </Box>
                 )}
               </MenuItem>
             </Menu>

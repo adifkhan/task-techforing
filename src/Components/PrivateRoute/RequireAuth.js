@@ -35,10 +35,26 @@ const RequireAuth = ({ children }) => {
   }
   if (!user.emailVerified) {
     return (
-      <Box className='container'>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '70vh',
+        }}
+      >
+        <Typography variant='h5'>Your Email is not verified!</Typography>
         <Button
           variant='contained'
-          sx={{ backgroundColor: '#182f59', mt: 3, mb: 2 }}
+          sx={{
+            backgroundColor: '#182f59',
+            mt: 3,
+            mb: 2,
+            '&:hover': {
+              backgroundColor: '#182f59',
+            },
+          }}
           onClick={sendVerification}
         >
           {sending ? 'Sending...' : 'Re-send verification email'}
